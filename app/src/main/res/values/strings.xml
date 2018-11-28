@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MovieToday</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="rating">Rating</string>
+    <string name="overview">Overview</string>
+    <string name="detail">Detail</string>
+    <string name="share">Share</string>
+    <string name="release_date">Release Date</string>
+    <string name="error_load_data">Failed to load data. Please check your Internet connections!</string>
+</resources>

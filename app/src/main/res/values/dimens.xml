@@ -1,0 +1,10 @@
+<resources>
+    <dimen name="activity_double_margin">32dp</dimen>
+    <dimen name="activity_margin">16dp</dimen>
+    <dimen name="activity_half_margin">8dp</dimen>
+    <dimen name="poster_width_large">154dp</dimen>
+    <dimen name="poster_height_large">231dp</dimen>
+    <dimen name="poster_width_small">92dp</dimen>
+    <dimen name="poster_height_small">138dp</dimen>
+
+</resources>

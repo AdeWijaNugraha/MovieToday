@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.awn.app.movietoday.DetailActivity">
+
+    <include layout="@layout/appbar_activity_detail" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_half_margin"
+            app:cardCornerRadius="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/activity_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_half_margin"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_detail_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                        android:textStyle="bold"
+                        tools:text="Title Will Be Shown Here" />
+
+                    <ImageView
+                        android:id="@+id/iv_favorite"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginLeft="@dimen/activity_half_margin"
+                        android:src="@drawable/ic_star_border"
+                        android:tint="#FFC107">
+
+                    </ImageView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_detail_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/release_date"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                        android:textStyle="bold"
+                        tools:text="Rating" />
+
+                    <include layout="@layout/detail_rating" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/release_date"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                        android:textStyle="bold"
+                        tools:text="Release Date" />
+
+                    <TextView
+                        android:id="@+id/tv_detail_release"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_half_margin"
+                        android:layout_marginTop="@dimen/activity_half_margin"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        tools:text="23 May 2019" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/activity_half_margin"
+                        android:text="@string/overview"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                        android:textStyle="bold"
+                        tools:text="Overview" />
+
+                    <TextView
+                        android:id="@+id/tv_detail_overview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_half_margin"
+                        android:layout_marginTop="@dimen/activity_half_margin"
+                        tools:text="A general outline of a subject or situation survey or summary. Without value and effect." />
+
+                    <Button
+                        android:id="@+id/btn_download"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/activity_margin"
+                        android:text="Download Poster" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>
