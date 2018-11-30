@@ -20,21 +20,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.awn.app.movietoday.database.DatabaseContract.CONTENT_URI;
-
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FavoriteFragment extends Fragment {
 
-
-    public FavoriteFragment() {
-        // Required empty public constructor
-    }
-
     private FavoriteHelper favoriteHelper;
-    private Cursor cur;
+    private Cursor cursor;
     private FavoriteAdapter favoriteAdapter;
     private Context context;
     private Unbinder unbind;
@@ -42,12 +34,16 @@ public class FavoriteFragment extends Fragment {
     @BindView(R.id.rv_favorite)
     RecyclerView rv_favorite;
 
+    public FavoriteFragment() {
+        // Required empty public constructor
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
         context = view.getContext();
         unbind = ButterKnife.bind(this, view);
-        favoriteAdapter = new FavoriteAdapter(cur);
+        favoriteAdapter = new FavoriteAdapter(cursor);
         rv_favorite.setLayoutManager(new LinearLayoutManager(context));
         rv_favorite.setAdapter(favoriteAdapter);
         new loadData().execute();
@@ -74,11 +70,12 @@ public class FavoriteFragment extends Fragment {
             favoriteHelper.open();
             return favoriteHelper.queryAll();
         }
+
         @Override
         protected void onPostExecute(Cursor cursor) {
             super.onPostExecute(cursor);
-            cur = cursor;
-            favoriteAdapter.replaceAll(cur);
+            FavoriteFragment.this.cursor = cursor;
+            favoriteAdapter.replaceAll(FavoriteFragment.this.cursor);
         }
     }
 

@@ -3,7 +3,7 @@ package com.awn.app.movietoday.loader;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.awn.app.movietoday.items.MovieItem;
+import com.awn.app.movietoday.item.MovieItem;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
 
@@ -15,12 +15,11 @@ import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
 
 public class NowPlayingLoader extends AsyncTaskLoader<ArrayList<MovieItem>> {
-    private ArrayList<MovieItem> mData;
+    private ArrayList<MovieItem> movieItemList;
     private Boolean mHasResult = false;
 
     public NowPlayingLoader(final Context context) {
         super(context);
-
         onContentChanged();
     }
 
@@ -30,13 +29,13 @@ public class NowPlayingLoader extends AsyncTaskLoader<ArrayList<MovieItem>> {
         if (takeContentChanged()) {
             forceLoad();
         } else if (mHasResult) {
-            deliverResult(mData);
+            deliverResult(movieItemList);
         }
     }
 
     @Override
     public void deliverResult(final ArrayList<MovieItem> data) {
-        mData = data;
+        movieItemList = data;
         mHasResult = true;
         super.deliverResult(data);
     }
@@ -46,8 +45,8 @@ public class NowPlayingLoader extends AsyncTaskLoader<ArrayList<MovieItem>> {
         super.onReset();
         onStopLoading();
         if (mHasResult) {
-            onReleaseResource(mData);
-            mData = null;
+            onReleaseResource(movieItemList);
+            movieItemList = null;
             mHasResult = false;
         }
     }
@@ -57,11 +56,9 @@ public class NowPlayingLoader extends AsyncTaskLoader<ArrayList<MovieItem>> {
     @Override
     public ArrayList<MovieItem> loadInBackground() {
         SyncHttpClient client = new SyncHttpClient();
-
-        final ArrayList<MovieItem> movieItemses = new ArrayList<>();
+        final ArrayList<MovieItem> items = new ArrayList<>();
 
         String nation = "en-US";
-
         String url = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + API_KEY + "&language=" + nation;
 
         client.get(url, new AsyncHttpResponseHandler() {
@@ -81,7 +78,7 @@ public class NowPlayingLoader extends AsyncTaskLoader<ArrayList<MovieItem>> {
                     for (int i = 0; i < list.length(); i++) {
                         JSONObject movie = list.getJSONObject(i);
                         MovieItem movieItem = new MovieItem(movie);
-                        movieItemses.add(movieItem);
+                        items.add(movieItem);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -94,7 +91,7 @@ public class NowPlayingLoader extends AsyncTaskLoader<ArrayList<MovieItem>> {
             }
         });
 
-        return movieItemses;
+        return items;
     }
 
     public void onReleaseResource(ArrayList<MovieItem> data) {

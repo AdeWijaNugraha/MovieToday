@@ -10,7 +10,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.awn.app.movietoday.items.MovieItem;
+import com.awn.app.movietoday.item.MovieItem;
 
 import static android.provider.BaseColumns._ID;
 
@@ -58,18 +58,5 @@ public class FavoriteHelper {
     public Cursor queryAll() {
         return db.query(FavoriteColumns.TABEL_NAME, null, null, null, null, null, _ID + " ASC");
     }
-//
 
-//
-//    public long queryForInsertProvider(ContentValues values) {
-//        return db.insert(NAMA_TABEL, null, values);
-//    }
-//
-//    public int queryForUpdateProvider(String id, ContentValues values) {
-//        return db.update(NAMA_TABEL, values, _ID + " = ?", new String[]{id});
-//    }
-//
-//    public int queryForDeleteProvider(String id) {
-//        return db.delete(NAMA_TABEL, _ID + " = ?", new String[]{id});
-//    }
 }

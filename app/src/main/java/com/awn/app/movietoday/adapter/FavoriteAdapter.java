@@ -1,7 +1,10 @@
 package com.awn.app.movietoday.adapter;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +15,7 @@ import android.widget.TextView;
 
 import com.awn.app.movietoday.DetailActivity;
 import com.awn.app.movietoday.R;
-import com.awn.app.movietoday.items.MovieItem;
+import com.awn.app.movietoday.item.MovieItem;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -133,7 +136,11 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
                     intent.setType("text/plain");
                     intent.putExtra(Intent.EXTRA_TITLE, "MovieToday");
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Overview of " + item.getTitle());
-                    intent.putExtra(Intent.EXTRA_TEXT, item.getOverview());
+                    intent.putExtra(Intent.EXTRA_TEXT, "Yeay! Today is a great day! \nLet's join with us to watch \""
+                            + item.getTitle()
+                            + "\" ! \n\nThis film tells about "
+                            + item.getOverview()
+                            + "\n\nWaitt! Check the schedule on your cinema and don't forget to buy some popcorn and soft drink! :D");
                     itemView.getContext().startActivity(Intent.createChooser(intent, itemView.getResources().getString(R.string.share)));
                 }
             });

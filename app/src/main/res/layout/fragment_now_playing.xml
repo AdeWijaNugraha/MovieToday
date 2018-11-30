@@ -13,8 +13,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_movie"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="@dimen/activity_margin" />
+            android:layout_height="match_parent" />
 
         <com.github.ybq.android.spinkit.SpinKitView
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -24,7 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            app:SpinKit_Color="@color/colorAccent" />
+            app:SpinKit_Color="@color/colorAccent"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_noResult"

@@ -1,13 +1,14 @@
-package com.awn.app.movietoday.items;
+package com.awn.app.movietoday.item;
 
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.json.JSONObject;
 
 import java.io.Serializable;
 
 import static android.provider.BaseColumns._ID;
-import static com.awn.app.movietoday.database.DatabaseContract.getColumnDouble;
 import static com.awn.app.movietoday.database.DatabaseContract.getColumnInt;
 import static com.awn.app.movietoday.database.DatabaseContract.getColumnString;
 import static com.awn.app.movietoday.database.FavoriteColumns.COLUMN_BACKDROP;
@@ -17,7 +18,7 @@ import static com.awn.app.movietoday.database.FavoriteColumns.COLUMN_RATING;
 import static com.awn.app.movietoday.database.FavoriteColumns.COLUMN_RELEASE;
 import static com.awn.app.movietoday.database.FavoriteColumns.COLUMN_TITLE;
 
-public class MovieItem implements Serializable {
+public class MovieItem implements Parcelable {
     private int id;
     private String title;
     private String rating;
@@ -126,4 +127,42 @@ public class MovieItem implements Serializable {
     public String getOverview() {
         return overview;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.title);
+        dest.writeString(this.rating);
+        dest.writeString(this.poster);
+        dest.writeString(this.backdrop);
+        dest.writeString(this.releaseDate);
+        dest.writeString(this.overview);
+    }
+
+    protected MovieItem(Parcel in) {
+        this.id = in.readInt();
+        this.title = in.readString();
+        this.rating = in.readString();
+        this.poster = in.readString();
+        this.backdrop = in.readString();
+        this.releaseDate = in.readString();
+        this.overview = in.readString();
+    }
+
+    public static final Parcelable.Creator<MovieItem> CREATOR = new Parcelable.Creator<MovieItem>() {
+        @Override
+        public MovieItem createFromParcel(Parcel source) {
+            return new MovieItem(source);
+        }
+
+        @Override
+        public MovieItem[] newArray(int size) {
+            return new MovieItem[size];
+        }
+    };
 }

@@ -1,21 +1,24 @@
 package com.awn.app.movietoday;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.awn.app.movietoday.adapter.MovieAdapter;
 import com.awn.app.movietoday.adapter.TabAdapter;
+import com.awn.app.movietoday.preference.SettingsActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity
 
     public static MovieAdapter mAdapter;
 
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,10 +65,24 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(viewPager);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_movie);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_star_border);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_star_border_white);
         tabLayout.setOnTabSelectedListener(this);
 
         selectNav(0);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setColors();
+    }
+
+    private void setColors(){
+        toolbar.setBackgroundColor(sharedPreferences.getInt(getString(R.string.colorPrimaryPreference),  ContextCompat.getColor(getBaseContext(), R.color.colorPrimary)));
+        tabLayout.setBackgroundColor(sharedPreferences.getInt(getString(R.string.colorPrimaryPreference),  ContextCompat.getColor(getBaseContext(), R.color.colorPrimary)));
+        tabLayout.setSelectedTabIndicatorColor(sharedPreferences.getInt(getString(R.string.colorAccentPreference),  ContextCompat.getColor(getBaseContext(), R.color.colorAccent)));
     }
 
     @Override
@@ -85,7 +104,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_setting) {
-            Intent intent = new Intent(this, PreferenceActivity.class);
+            Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
         }

@@ -1,15 +1,13 @@
 package com.awn.app.movietoday;
 
-import android.*;
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -25,12 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.awn.app.movietoday.database.FavoriteHelper;
-import com.awn.app.movietoday.download.CheckForSDCard;
 import com.awn.app.movietoday.download.DownloadTask;
-import com.awn.app.movietoday.items.MovieItem;
+import com.awn.app.movietoday.item.MovieItem;
 import com.bumptech.glide.Glide;
 
-import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
@@ -43,6 +39,7 @@ public class DetailActivity extends AppCompatActivity {
     private MovieItem item;
     private FavoriteHelper favoriteHelper;
     private Boolean isFavorite = false;
+    private SharedPreferences sharedPreferences;
 
     @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsing_toolbar;
@@ -85,23 +82,25 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        int PERMISSION_ALL = 1;
+        int PERMISSION_ALL = 99;
         String[] PERMISSIONS = {
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
         };
 
         if(!hasPermissions(this, PERMISSIONS)){
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
 
-        item = (MovieItem) getIntent().getSerializableExtra(KEY_MOVIE);
+        item = (MovieItem) getIntent().getParcelableExtra(KEY_MOVIE);
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         collapsing_toolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
         loadData();
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         iv_favorite.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +110,6 @@ public class DetailActivity extends AppCompatActivity {
                     iv_favorite.setImageResource(R.drawable.ic_star_border);
                 } else {
                     long a = favoriteHelper.insert(item);
-                    Log.e("LOL", "onClick: "+a);
                     iv_favorite.setImageResource(R.drawable.ic_star_full);
                 }
             }
@@ -124,13 +122,10 @@ public class DetailActivity extends AppCompatActivity {
                 int permissionCheck = ContextCompat.checkSelfPermission(DetailActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
                     if (isConnectingToInternet()) {
-                        new DownloadTask(DetailActivity.this, btn_download, item.getBackdrop(), item.getTitle());
-
+                        new DownloadTask(DetailActivity.this, btn_download, item.getPoster(), item.getTitle());
                     } else
                         Toast.makeText(DetailActivity.this, "Oops!! There is no internet connection. Please enable internet connection and try again.", Toast.LENGTH_SHORT).show();
-
                 }
-
             }
 
         });
@@ -164,7 +159,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         double userRating = Double.parseDouble(item.getRating()) / 2;
-        int integerPart = (int) userRating;
+        int integerPart = (int) Math.floor(userRating);
         // Fill stars
         for (int i = 0; i < integerPart; i++) {
             img_vote.get(i).setImageResource(R.drawable.ic_star_full);
@@ -181,6 +176,16 @@ public class DetailActivity extends AppCompatActivity {
                 .into(iv_backdrop);
         tv_release.setText(item.getReleaseDate());
         tv_overview.setText(item.getOverview());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setColors();
+    }
+
+    private void setColors(){
+        collapsing_toolbar.setContentScrimColor(sharedPreferences.getInt(getString(R.string.colorPrimaryPreference),  ContextCompat.getColor(getBaseContext(), R.color.colorPrimary)));
     }
 
     @Override
@@ -201,7 +206,6 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    //Check if internet is present or not
     private boolean isConnectingToInternet() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager
