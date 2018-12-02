@@ -1,10 +1,7 @@
 package com.awn.app.movietoday.adapter;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,19 +24,21 @@ import butterknife.ButterKnife;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
 
-    private Cursor cur;
+    private Cursor cursor;
 
     public FavoriteAdapter(Cursor items) {
         replaceAll(items);
     }
 
     public void replaceAll(Cursor items) {
-        cur = items;
+        cursor = items;
         notifyDataSetChanged();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+//        bind item to recycler
         return new ViewHolder(
                 LayoutInflater.from(parent.getContext()).inflate(
                         R.layout.item, parent, false
@@ -54,15 +53,15 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        if (cur == null) return 0;
-        return cur.getCount();
+        if (cursor == null) return 0;
+        return cursor.getCount();
     }
 
     private MovieItem getItem(int position) {
-        if (!cur.moveToPosition(position)) {
+        if (!cursor.moveToPosition(position)) {
             throw new IllegalStateException("Illegal State");
         }
-        return new MovieItem(cur);
+        return new MovieItem(cursor);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -93,25 +92,31 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
 
         public ViewHolder(View itemView) {
             super(itemView);
+
+//            binding view
             ButterKnife.bind(this, itemView);
         }
 
         public void bind(final MovieItem item) {
+//            set title
             tv_title.setText(item.getTitle());
 
+//            set rating
             double userRating = Double.parseDouble(item.getRating()) / 2;
             int integerPart = (int) userRating;
-            // Fill stars
+//            Fill full stars
             for (int i = 0; i < integerPart; i++) {
                 img_vote.get(i).setImageResource(R.drawable.ic_star_full);
             }
-            // Fill half star
+//            Fill half star
             if (Math.round(userRating) > integerPart) {
                 img_vote.get(integerPart).setImageResource(R.drawable.ic_star_half);
             }
 
+//            set overview
             tv_overview.setText(item.getOverview());
 
+//            set poster
             Glide.with(itemView.getContext())
                     .load("http://image.tmdb.org/t/p/w185" + item.getPoster())
                     .apply(new RequestOptions()
@@ -123,6 +128,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             btn_detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+//                    move to detail activity
                     Intent intent = new Intent(itemView.getContext(), DetailActivity.class);
                     intent.putExtra(DetailActivity.KEY_MOVIE, item);
                     itemView.getContext().startActivity(intent);
@@ -132,6 +139,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             btn_share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+//                    activate intent for share information
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("text/plain");
                     intent.putExtra(Intent.EXTRA_TITLE, "MovieToday");

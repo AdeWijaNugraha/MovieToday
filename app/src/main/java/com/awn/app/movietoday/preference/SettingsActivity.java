@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -35,7 +36,8 @@ import butterknife.BindView;
 
 public class SettingsActivity extends AppCompatPreferenceActivity{
     private static final String TAG = SettingsActivity.class.getSimpleName();
-    public static final String PREFS_NAME = "MovieToday_Settings";
+
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +49,25 @@ public class SettingsActivity extends AppCompatPreferenceActivity{
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+//        set up sharedPreferences
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    }
 
-        // Writing data to SharedPreferences
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("key", "some value");
-        editor.commit();
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        setColors();
+    }
+
+    //    mengatur warna berdasarkan preference
+    private void setColors() {
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(sharedPreferences.getInt(getString(R.string.keyColorPrimaryPreference), ContextCompat.getColor(getBaseContext(), R.color.colorPrimary))));
 
     }
 
@@ -62,18 +77,19 @@ public class SettingsActivity extends AppCompatPreferenceActivity{
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_main);
 
-            // gallery EditText change listener
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_gallery_name)));
+//            set preference download directory
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_directory_download)));
 
-
-            ColorPickerPreference colorPickerPreferencePrimary = (ColorPickerPreference) findPreference(getActivity().getString(R.string.colorPrimaryPreference));
+//            set preference primary color
+            ColorPickerPreference colorPickerPreferencePrimary = (ColorPickerPreference) findPreference(getActivity().getString(R.string.keyColorPrimaryPreference));
             colorPickerPreferencePrimary.setColorPickerDialogBuilder(getCustomBuilder());
 
-            ColorPickerPreference colorPickerPreferenceAccent = (ColorPickerPreference) findPreference(getActivity().getString(R.string.colorAccentPreference));
+//            set preference accent color
+            ColorPickerPreference colorPickerPreferenceAccent = (ColorPickerPreference) findPreference(getActivity().getString(R.string.keyColorAccentPreference));
             colorPickerPreferenceAccent.setColorPickerDialogBuilder(getCustomBuilder());
 
 
-            // feedback preference click listener
+//            feedback preference click listener
             Preference myPref = findPreference(getString(R.string.key_send_feedback));
             myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
@@ -132,7 +148,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity{
             String stringValue = newValue.toString();
 
             if (preference instanceof EditTextPreference) {
-                if (preference.getKey().equals("key_gallery_name")) {
+                if (preference.getKey().equals("key_directory_download")) {
                     // update the changed gallery name to summary filed
                     preference.setSummary(stringValue);
                 }

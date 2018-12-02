@@ -29,6 +29,7 @@ import butterknife.ButterKnife;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     private ArrayList<MovieItem> listMovie;
+
     private Context context;
 
     public MovieAdapter(Context context) {
@@ -45,6 +46,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+//        bind item to recycler
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
         MovieViewHolder viewHolder = new MovieViewHolder(view);
         return viewHolder;
@@ -88,25 +91,31 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
         public MovieViewHolder(View itemView) {
             super(itemView);
+
+//            binding view
             ButterKnife.bind(this, itemView);
         }
 
         public void bind(final MovieItem item) {
+//            set title
             tv_title.setText(item.getTitle());
 
+//            set rating
             double userRating = Double.parseDouble(item.getRating()) / 2;
             int integerPart = (int) Math.floor(userRating);
-            // Fill stars
+//            Fill full stars
             for (int i = 0; i < integerPart; i++) {
                 img_vote.get(i).setImageResource(R.drawable.ic_star_full);
             }
-            // Fill half star
+//            Fill half star
             if (Math.round(userRating) > integerPart) {
                 img_vote.get(integerPart).setImageResource(R.drawable.ic_star_half);
             }
 
+//            set overview
             tv_overview.setText(item.getOverview());
 
+//            set poster
             Glide.with(itemView.getContext())
                     .load("http://image.tmdb.org/t/p/w185" + item.getPoster())
                     .apply(new RequestOptions()
@@ -118,6 +127,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             btn_detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+//                    move to detail activity
                     Intent intent = new Intent(itemView.getContext(), DetailActivity.class);
                     intent.putExtra(DetailActivity.KEY_MOVIE, item);
                     itemView.getContext().startActivity(intent);
@@ -127,6 +138,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             btn_share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+//                    activate intent for share information
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("text/plain");
                     intent.putExtra(Intent.EXTRA_TITLE, "MovieToday");

@@ -2,6 +2,8 @@ package com.awn.app.movietoday;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -51,25 +53,29 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        binding view
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//        set up navigation drawer
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.setDrawerListener(toggle);
-        toggle.syncState();
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
         navigation.setNavigationItemSelectedListener(this);
 
+//        set up tab
         viewPager.setAdapter(new TabAdapter(getSupportFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
-
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_movie);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_star_border_white);
         tabLayout.setOnTabSelectedListener(this);
 
         selectNav(0);
 
+//        set up sharedPreferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
@@ -79,12 +85,19 @@ public class MainActivity extends AppCompatActivity
         setColors();
     }
 
-    private void setColors(){
-        toolbar.setBackgroundColor(sharedPreferences.getInt(getString(R.string.colorPrimaryPreference),  ContextCompat.getColor(getBaseContext(), R.color.colorPrimary)));
-        tabLayout.setBackgroundColor(sharedPreferences.getInt(getString(R.string.colorPrimaryPreference),  ContextCompat.getColor(getBaseContext(), R.color.colorPrimary)));
-        tabLayout.setSelectedTabIndicatorColor(sharedPreferences.getInt(getString(R.string.colorAccentPreference),  ContextCompat.getColor(getBaseContext(), R.color.colorAccent)));
+//    mengatur warna berdasarkan preference
+    private void setColors() {
+        toolbar.setBackgroundColor(sharedPreferences.getInt(getString(R.string.keyColorPrimaryPreference), ContextCompat.getColor(getBaseContext(), R.color.colorPrimary)));
+        tabLayout.setBackgroundColor(sharedPreferences.getInt(getString(R.string.keyColorPrimaryPreference), ContextCompat.getColor(getBaseContext(), R.color.colorPrimary)));
+        tabLayout.setSelectedTabIndicatorColor(sharedPreferences.getInt(getString(R.string.keyColorAccentPreference), ContextCompat.getColor(getBaseContext(), R.color.colorAccent)));
+        int states[][] = new int[][] { new int[] { -android.R.attr.state_checked}, new int[] {android.R.attr.state_checked}};
+        int colors[] = new int[] {R.color.colorPrimaryDark, sharedPreferences.getInt(getString(R.string.keyColorPrimaryPreference), ContextCompat.getColor(getBaseContext(), R.color.colorPrimary))};
+        ColorStateList colorStateList = new ColorStateList(states, colors);
+        navigation.setItemTextColor(colorStateList);
+        navigation.setItemIconTintList(colorStateList);
     }
 
+//    ketika button back ditekan maka menutup navigation drawer
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -94,6 +107,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+//    set up toolbar menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -103,6 +117,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
+//        intent ke menu setting
         if (id == R.id.menu_setting) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
@@ -111,6 +127,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+//    ketika salah menu di navigation drawer ditekan maka tab berganti sesuai dengan tab yang dituju dan menutup navigation drawer
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -127,6 +144,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+//    berganti tab sesuai tab yg dipilih
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         selectNav(tab.getPosition());
@@ -152,6 +170,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+//    ketika menu dipilih pada navigation drawer
     private void selectNav(int navNumber) {
         navigation.getMenu().getItem(navNumber).setChecked(true);
     }

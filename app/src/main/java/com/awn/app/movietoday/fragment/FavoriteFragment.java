@@ -25,14 +25,14 @@ import butterknife.Unbinder;
  */
 public class FavoriteFragment extends Fragment {
 
+    @BindView(R.id.rv_favorite)
+    RecyclerView rv_favorite;
+
     private FavoriteHelper favoriteHelper;
     private Cursor cursor;
     private FavoriteAdapter favoriteAdapter;
     private Context context;
     private Unbinder unbind;
-
-    @BindView(R.id.rv_favorite)
-    RecyclerView rv_favorite;
 
     public FavoriteFragment() {
         // Required empty public constructor
@@ -42,11 +42,16 @@ public class FavoriteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
         context = view.getContext();
+
+//        binding fragment's view
         unbind = ButterKnife.bind(this, view);
-        favoriteAdapter = new FavoriteAdapter(cursor);
+
+//        set up recycler view
         rv_favorite.setLayoutManager(new LinearLayoutManager(context));
+        favoriteAdapter = new FavoriteAdapter(cursor);
         rv_favorite.setAdapter(favoriteAdapter);
-        new loadData().execute();
+
+        new LoadData().execute();
         return view;
     }
 
@@ -60,10 +65,11 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        new loadData().execute();
+        new LoadData().execute();
     }
 
-    private class loadData extends AsyncTask<Void, Void, Cursor> {
+//    load data from database in background
+    private class LoadData extends AsyncTask<Void, Void, Cursor> {
         @Override
         protected Cursor doInBackground(Void... voids) {
             favoriteHelper = new FavoriteHelper(getContext());

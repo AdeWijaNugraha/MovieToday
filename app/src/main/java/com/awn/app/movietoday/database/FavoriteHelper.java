@@ -1,9 +1,5 @@
 package com.awn.app.movietoday.database;
 
-/**
- * Created by adewijanugraha on 05/03/18.
- */
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -25,16 +21,19 @@ public class FavoriteHelper {
         this.context = context;
     }
 
+//    open db
     public FavoriteHelper open() throws SQLException {
         dbHelper = new DatabaseHelper(context);
         db = dbHelper.getWritableDatabase();
         return this;
     }
 
+//    close db
     public void dbClose() {
         dbHelper.close();
     }
 
+//    query insert
     public long insert(MovieItem item){
         ContentValues cv = new ContentValues();
         cv.put(FavoriteColumns.COLUMN_ID, item.getId());
@@ -47,14 +46,17 @@ public class FavoriteHelper {
         return db.insert(FavoriteColumns.TABEL_NAME, null, cv);
     }
 
+//    query delete
     public int delete(int id){
         return db.delete(FavoriteColumns.TABEL_NAME, FavoriteColumns.COLUMN_ID + " = '" + id +"'",null);
     }
 
+//    query select by id
     public Cursor queryForId(String id) {
         return db.query(FavoriteColumns.TABEL_NAME, null, FavoriteColumns.COLUMN_ID + " = ?", new String[]{id}, null, null, null);
     }
 
+//    query select all
     public Cursor queryAll() {
         return db.query(FavoriteColumns.TABEL_NAME, null, null, null, null, null, _ID + " ASC");
     }

@@ -37,10 +37,6 @@ import butterknife.ButterKnife;
  */
 public class NowPlayingFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<MovieItem>>, SwipeRefreshLayout.OnRefreshListener {
 
-    private ArrayList<MovieItem> movieItemList;
-    private static final String KEY = "MovieItems";
-    private SharedPreferences sharedPreferences;
-
     @BindView(R.id.rv_movie)
     RecyclerView rvMovie;
 
@@ -53,6 +49,12 @@ public class NowPlayingFragment extends Fragment implements LoaderManager.Loader
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeLayout;
 
+    private ArrayList<MovieItem> movieItemList;
+
+    private static final String KEY = "MovieItems";
+
+    private SharedPreferences sharedPreferences;
+
     public NowPlayingFragment() {
         // Required empty public constructor
     }
@@ -60,18 +62,30 @@ public class NowPlayingFragment extends Fragment implements LoaderManager.Loader
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_now_playing, container, false);
+
+//        binding fragment's view
         ButterKnife.bind(this, view);
+
         rvMovie.setHasFixedSize(true);
+
+//        set refresh when it's swiped
         swipeLayout.setOnRefreshListener(this);
+
+//        set up progress bar when loading
         Sprite doubleBounce = new CubeGrid();
         progressBar.setIndeterminateDrawable(doubleBounce);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
+//        set up data when phone is rotated
         if (savedInstanceState != null) {
+
+//            jika sudah ada data yg sisimpan pada save instance state
             movieItemList = savedInstanceState.getParcelableArrayList(KEY);
             showRecyclerCardView();
         } else {
+
+//            jalankan loader jika tidak ada data yg disimpan
             getLoaderManager().initLoader(0, null, this);
         }
         return view;
@@ -83,33 +97,33 @@ public class NowPlayingFragment extends Fragment implements LoaderManager.Loader
         setColors();
     }
 
+//    mengatur warna berdasarkan preference
     private void setColors(){
-        progressBar.setColor(sharedPreferences.getInt(getString(R.string.colorAccentPreference),  ContextCompat.getColor(getContext(), R.color.colorAccent)));
+        progressBar.setColor(sharedPreferences.getInt(getString(R.string.keyColorAccentPreference),  ContextCompat.getColor(getContext(), R.color.colorAccent)));
     }
 
-    private void showRecyclerCardView() {
-        rvMovie.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        MovieAdapter movieAdapter = new MovieAdapter(this.getActivity());
-        movieAdapter.setListMovie(movieItemList);
-        rvMovie.setAdapter(movieAdapter);
-        MainActivity.mAdapter = movieAdapter;
-    }
-
+//    start load data
     @Override
     public Loader<ArrayList<MovieItem>> onCreateLoader(int id, Bundle args) {
+//        tampilkan progress bar
         tvNoResult.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
         return new NowPlayingLoader(getActivity());
     }
 
+//    finish load data
     @Override
     public void onLoadFinished(Loader<ArrayList<MovieItem>> loader, ArrayList<MovieItem> data) {
         if (data.isEmpty()) {
+
+//            tampilkan tulisan error load data
             tvNoResult.setVisibility(View.VISIBLE);
             rvMovie.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);
         } else {
+
+//            tampilkan data, hilangkan progress bar
             movieItemList = new ArrayList<>();
             movieItemList.addAll(data);
 
@@ -121,11 +135,22 @@ public class NowPlayingFragment extends Fragment implements LoaderManager.Loader
         }
     }
 
+//    set up recycler view
+    private void showRecyclerCardView() {
+        rvMovie.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        MovieAdapter movieAdapter = new MovieAdapter(this.getActivity());
+        movieAdapter.setListMovie(movieItemList);
+        rvMovie.setAdapter(movieAdapter);
+        MainActivity.mAdapter = movieAdapter;
+    }
+
+//    reset loader
     @Override
     public void onLoaderReset(Loader<ArrayList<MovieItem>> loader) {
         movieItemList.clear();
     }
 
+//    restart loader when it's swiped
     @Override
     public void onRefresh() {
         getLoaderManager().restartLoader(0, null, this);
@@ -135,6 +160,6 @@ public class NowPlayingFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(KEY, movieItemList);
+        outState.putParcelableArrayList(KEY, movieItemList);
     }
 }

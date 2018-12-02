@@ -7,13 +7,14 @@
     <string name="detail">Detail</string>
     <string name="share">Share</string>
     <string name="release_date">Release Date</string>
-    <string name="error_load_data">Failed to load data. Please check your Internet connections!</string>
+    <string name="error_load_data">Failed to load data! Please check your Internet connections and try again!</string>
+    <string name="cant_download">Oops!! There is no internet connection. Please enable internet connection and try again.</string>
 
 
     <string name="default_gallery_storage">MovieToday</string>
 
-    <string name="colorPrimaryPreference">Color Primary Preference</string>
-    <string name="colorAccentPreference">Color Accent Preference</string>
+    <string name="keyColorPrimaryPreference">color_primary_preference</string>
+    <string name="keyColorAccentPreference">color_accent_preference</string>
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
@@ -43,7 +44,10 @@
     <string name="choose_email_client">Choose email client</string>
     <string name="title_gallery_storage">Default Storage</string>
 
-    <string name="key_gallery_name">key_gallery_name</string>
+    <string name="key_directory_download">key_directory_download</string>
     <string name="key_send_feedback">key_send_feedback</string>
     <string name="settings">Settings</string>
+    <string name="download_failed">Download Failed</string>
+    <string name="download_again">Download Again</string>
+    <string name="download_complete">Download Complete</string>
 </resources>

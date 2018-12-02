@@ -1,9 +1,5 @@
 package com.awn.app.movietoday.database;
 
-/**
- * Created by adewijanugraha on 05/03/18.
- */
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -14,6 +10,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, "movie_today", null, 1);
     }
 
+//    create table and column
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String CREATE_TABLE_MOVIE = "create table " + FavoriteColumns.TABEL_NAME + " (" +

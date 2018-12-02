@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.awn.app.movietoday.fragment.FavoriteFragment;
 import com.awn.app.movietoday.fragment.NowPlayingFragment;
 
-
+//set up tab
 public class TabAdapter extends FragmentPagerAdapter {
 
     private static final int TABS = 2;

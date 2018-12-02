@@ -5,12 +5,12 @@
         <PreferenceCategory android:title="General">
             <EditTextPreference
                 android:defaultValue="@string/default_gallery_storage"
-                android:key="@string/key_gallery_name"
+                android:key="@string/key_directory_download"
                 android:summary="@string/default_gallery_storage"
                 android:title="@string/title_gallery_storage" />
 
             <com.skydoves.colorpickerpreference.ColorPickerPreference
-                android:key="@string/colorPrimaryPreference"
+                android:key="@string/keyColorPrimaryPreference"
                 android:title="Primary Color"
                 android:summary="Changes primary color"
                 app:preference_dialog_title="Primary Color Picker Dialog"
@@ -21,7 +21,7 @@
                 app:default_color="@color/colorPrimary"/>
 
             <com.skydoves.colorpickerpreference.ColorPickerPreference
-                android:key="@string/colorAccentPreference"
+                android:key="@string/keyColorAccentPreference"
                 android:title="Accent Color"
                 android:summary="Changes accent color"
                 app:preference_dialog_title="Accent Color Picker Dialog"

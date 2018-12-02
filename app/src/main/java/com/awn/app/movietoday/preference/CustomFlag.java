@@ -23,4 +23,5 @@ public class CustomFlag extends FlagView {
         textView.setText("#" + colorEnvelope.getColorHtml());
         view.setBackgroundColor(colorEnvelope.getColor());
     }
+
 }

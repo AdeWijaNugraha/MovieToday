@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
 
 public class NowPlayingLoader extends AsyncTaskLoader<ArrayList<MovieItem>> {
+    private static final String API_KEY = "885dfd8e2dbca4e70eb8a4af4b5b6785";
+    private static final String NATION = "en-US";
+
     private ArrayList<MovieItem> movieItemList;
     private Boolean mHasResult = false;
 
@@ -33,34 +36,14 @@ public class NowPlayingLoader extends AsyncTaskLoader<ArrayList<MovieItem>> {
         }
     }
 
-    @Override
-    public void deliverResult(final ArrayList<MovieItem> data) {
-        movieItemList = data;
-        mHasResult = true;
-        super.deliverResult(data);
-    }
-
-    @Override
-    protected void onReset() {
-        super.onReset();
-        onStopLoading();
-        if (mHasResult) {
-            onReleaseResource(movieItemList);
-            movieItemList = null;
-            mHasResult = false;
-        }
-    }
-
-    private static final String API_KEY = "885dfd8e2dbca4e70eb8a4af4b5b6785";
-
+//    do task in background
     @Override
     public ArrayList<MovieItem> loadInBackground() {
-        SyncHttpClient client = new SyncHttpClient();
         final ArrayList<MovieItem> items = new ArrayList<>();
 
-        String nation = "en-US";
-        String url = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + API_KEY + "&language=" + nation;
-
+        //load data from internet using loopJ
+        SyncHttpClient client = new SyncHttpClient();
+        String url = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + API_KEY + "&language=" + NATION;
         client.get(url, new AsyncHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -71,11 +54,15 @@ public class NowPlayingLoader extends AsyncTaskLoader<ArrayList<MovieItem>> {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {
+
+//                    get data json
                     String result = new String(responseBody);
                     JSONObject responseObject = new JSONObject(result);
                     JSONArray list = responseObject.getJSONArray("results");
 
                     for (int i = 0; i < list.length(); i++) {
+
+//                        set data into movieItem
                         JSONObject movie = list.getJSONObject(i);
                         MovieItem movieItem = new MovieItem(movie);
                         items.add(movieItem);
@@ -92,6 +79,25 @@ public class NowPlayingLoader extends AsyncTaskLoader<ArrayList<MovieItem>> {
         });
 
         return items;
+    }
+
+    @Override
+    public void deliverResult(final ArrayList<MovieItem> data) {
+        movieItemList = data;
+        mHasResult = true;
+        super.deliverResult(data);
+    }
+
+//    reset loader
+    @Override
+    protected void onReset() {
+        super.onReset();
+        onStopLoading();
+        if (mHasResult) {
+            onReleaseResource(movieItemList);
+            movieItemList = null;
+            mHasResult = false;
+        }
     }
 
     public void onReleaseResource(ArrayList<MovieItem> data) {
